@@ -1,4 +1,4 @@
-name: Website Deployment-while-on-errors
+name: Website Deployment-matrix
 on:
   push:
 jobs:
