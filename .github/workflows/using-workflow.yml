@@ -1,28 +1,28 @@
-name: Website Deployment-matrix
+name: using-workflow
 on:
   push:
 jobs:
   build:
-    strategy:
-      matrix:
-        NodeJS-Version: [12, 14, 16, 20]
-        os: [ubuntu-latest, macos-latest]
-        include::
-          - NodeJS-Version: 18
-            os: macos-latest
-        exclude:
-          - NodeJS-Version: 14
-            os: ubuntu-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Install NOdeJS
-        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
         with:
-          node-version: ${{ matrix.NodeJS-Version }}
-      - name: Install Dependencies
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
         run: npm ci
-      - name: Build Code
+      - name: Build website
+        id: build-website
         run: npm run build
-  
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+  Deploy:
+    needs: ./.github/workflows/reuseableworkflow.yml
+    
