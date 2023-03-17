@@ -79,5 +79,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: o/p info
-        run: |
-          echo: something went wrong
+        run: echo "something went wrong"
